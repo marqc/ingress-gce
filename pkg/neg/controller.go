@@ -512,6 +512,9 @@ func (c *Controller) processService(key string) error {
 			return err
 		}
 	}
+
+	c.logger.V(2).Info("DUPA KURWA BISKUPA", "service", key, "len(svcPortInfoMap)", len(svcPortInfoMap))
+
 	if len(svcPortInfoMap) != 0 {
 		c.logger.V(2).Info("Syncing service", "service", key)
 		// TODO(cheungdavid): Remove this validation when single stack ipv6 endpoint is supported
@@ -603,6 +606,7 @@ func (c *Controller) mergeVmIpNEGsPortInfo(service *apiv1.Service, name types.Na
 	wantsILB, _ := annotations.WantsL4ILB(service)
 	wantsNetLB, _ := annotations.WantsL4NetLB(service)
 	needsNEGForNetLB := wantsNetLB && !networkInfo.IsDefault && annotations.HasRBSAnnotation(service)
+	c.logger.Info("DUPA mergeVmIpNEGsPortInfo", "name", name.Name, "wantsILB", wantsILB, "wantsNetLB", wantsNetLB, "needsNEGForNetLB", needsNEGForNetLB)
 	if !wantsILB && !needsNEGForNetLB {
 		return nil
 	}
@@ -624,7 +628,10 @@ func (c *Controller) mergeVmIpNEGsPortInfo(service *apiv1.Service, name types.Na
 	// Update usage metrics.
 	negUsage.VmIpNeg = metricscollector.NewVmIpNegType(onlyLocal)
 
-	return portInfoMap.Merge(negtypes.NewPortInfoMapForVMIPNEG(name.Namespace, name.Name, c.l4Namer, onlyLocal, networkInfo))
+	c.logger.Info("DUPA merging VM IP NEG", "name", name.Name)
+	resp := negtypes.NewPortInfoMapForVMIPNEG(name.Namespace, name.Name, c.l4Namer, onlyLocal, networkInfo)
+	c.logger.Info("DUPA merging VM IP NEG:: response", "len(resp)", len(resp), "resp", resp)
+	return portInfoMap.Merge(resp)
 }
 
 // mergeDefaultBackendServicePortInfoMap merge the PortInfoMap for the default backend service into portInfoMap

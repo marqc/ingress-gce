@@ -184,6 +184,7 @@ func getSubsetPerZone(nodesPerZone map[string][]*v1.Node, totalLimit int, svcID 
 		subset := pickSubsetsMinRemovals(nodesPerZone[zone.Name], svcID, subsetSize, currentList)
 		for _, node := range subset {
 			var ip string
+			//FIXME FINDING IP
 			if !networkInfo.IsDefault {
 				ip = network.GetNodeIPForNetwork(node, networkInfo.K8sNetwork)
 			} else {

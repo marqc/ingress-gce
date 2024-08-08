@@ -292,6 +292,7 @@ func (l4c *L4Controller) processServiceCreateOrUpdate(service *v1.Service, svcLo
 			l4.NamespacedName.String())
 		return syncResult
 	}
+	// TO SIE PIERDOLI
 	if err = l4c.linkNEG(l4, svcLogger); err != nil {
 		l4c.ctx.Recorder(service.Namespace).Eventf(service, v1.EventTypeWarning, "SyncLoadBalancerFailed",
 			"Failed to link NEG with Backend Service for load balancer, err: %v", err)
